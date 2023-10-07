@@ -1,0 +1,7 @@
+/.env
+/.venv
+/.vs
+/.vscode
+/tmp
+/db
+requirements.txt
