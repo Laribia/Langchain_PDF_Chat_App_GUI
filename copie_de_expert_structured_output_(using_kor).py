@@ -33,6 +33,7 @@ import pandas as pd
 import requests
 import time
 import json
+from dotenv import load_dotenv
 from datetime import datetime
 
 # Text Helpers
@@ -46,8 +47,8 @@ def printOutput(output):
     print(json.dumps(output,sort_keys=False, indent=3))
 
 # It's better to do this an environment variable but putting it in plain text for clarity
-openai_api_key = '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'
-
+# openai_api_key = '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'
+load_dotenv()
 # openai_api_key = '...'
 
 """Let's start off by creating our LLM. We're using gpt4 to take advantage of its increased ability to follow instructions"""
@@ -57,7 +58,7 @@ llm = ChatOpenAI(
     model_name="gpt-4",
     temperature=0,
     max_tokens=4000,
-    openai_api_key=openai_api_key
+    # openai_api_key=openai_api_key
 )
 
 """### Kor Hello World Example
@@ -71,7 +72,7 @@ person_schema = Object(
     id="person",
 
     # Natural language description about your object
-    description="Person entities in the text.",
+    description="""Entities that are classified as names of individuals. This includes first names, last names, middle names, or any other forms of personal identifiers used to refer to a specific individual. It might include titles if they are used along with the names (e.g., "President Biden" or "Dr. Smith").""",
 
     # Fields you'd like to capture from a piece of text about your object.
     attributes=[
@@ -121,7 +122,7 @@ organization_schema = Object(
     id="organiztaion",
 
     # Natural language description about your object
-    description="Organization entities in the text.",
+    description="""Entities referring to a specific category used to identify and classify names of organizations, companies, institutions, government bodies, non-governmental organizations, and other corporate entities in a text. These can range widely, including corporations (like "Google" or "Microsoft"), government entities ("The United States Congress", "European Union"), non-governmental organizations ("Greenpeace", "United Nations"), or any group/coalition that is often recognized as a singular entity ("The Avengers", in fictional contexts).""",
 
     # Fields you'd like to capture from a piece of text about your object.
     attributes=[
@@ -157,7 +158,7 @@ location_schema = Object(
     id="location",
 
     # Natural language description about your object
-    description="Location entities in the text.",
+    description="""geopolitical entities, e.g. everything with a governing body like cities and countries. Examples: "Germany", "Buenos Aires". And everything else that's a physical location or area, like "Kalahari Desert" or "Silicon Valley".""",
 
     # Fields you'd like to capture from a piece of text about your object.
     attributes=[
@@ -219,7 +220,22 @@ schema = Object(
 chain = create_extraction_chain(llm, schema, encoder_or_encoder_class="json")
 
 text = """
-Most sports films end with some moment of triumph. "Chariots of Fire" with Harold Abrahams and Eric Liddell overcoming prejudice and their underdog status to become Olympic champions; Rocky wins the adoration of the crowd and declares his love for his girlfriend; Billy Beane's Moneyball strategy is vindicated."Tigers" ends triumphantly because Martin Bengtsson -- the protagonist whose real-life story the film is based on -- survives. When he was 17 years old and dreamed of becoming a professional footballer, Bengtsson was signed by Inter Milan after Chelsea and Ajax had also shown interest in him.He joined Inter's Primavera squad, lived with other academy prospects and was touted as the next Wayne Rooney or Zlatan Ibrahimović. But in Milan, his dream and career unraveled. After nine months in Italy, Bengtsson developed depression in the aftermath of an injury and attempted suicide by slitting his wrists in the shower. He was sent back to his native Sweden to recover, never returned and retired from football a year later at the age of 18. Encouraged by his therapist, Bengtsson began writing to process his experiences in Milan and to quash rumors that he left after becoming involved in drugs. "I was angry at what had happened and that can be a big, big drive in writing," he tells CNN Sport. "And while I was doing it, I also realized more and more that this is the story that's missing. No one had told it from the inside." When Bengtsson published his memoir "In the Shadow of San Siro" in 2007, it was one of the first accounts of its kind, even FIFPRO -- the worldwide players' union -- did not begin conducting studies into mental health until 2013. After Bengtsson published his book, he moved to Berlin where he met filmmaker and writer Ronnie Sandahl in 2011 and the two became good friends. "I knew Ronnie was a very, very good writer -- one of the greatest in his generation," Bengtsson says. "And so I knew that ... it would be a good movie ... I believed in him." Nine years later, Sandahl translated Bengtsson's story onto the screen as "Tigers," which will be released in UK cinemas on July 1. Sandahl's film has drawn critical acclaim and was submitted as Sweden's entry for the Best International Feature Film at the Oscars last year. The film's title references how caged animals are kept as tourist attractions, and cage-like motifs are scattered throughout the film.Part of the turmoil depicted in the film is Bengtsson's struggle to redefine his identity which was entirely dependent on football. Such was its importance that football proved to be the code with which actor Erik Enge understood and interpreted the character. "I had this fantastic personal trainer who basically just built my body to look like a football player," Enge tells CNN Sport. "Rather than just the mental way of reading a script ... I was able to get into Martin's head through physical work." Bengtsson's routine, as well as his identity, revolved around becoming a professional footballer. He would follow his own training schedule for three hours a day, alongside playing at his club.
+Butler launches attack on Blair
+
+Former civil service chief Lord Butler has criticised the way Tony Blair's government operates, accusing it of being obsessed with headlines.
+
+He also attacked the way the Iraq war was "sold" to the public, with important warnings on the strength of the intelligence left out. Tory leader Michael Howard said Lord Butler had given the "most damaging testimony" he could remember. But Downing Street said Mr Blair should be judged by results not his style.
+
+Lord Butler said Mr Blair bypassed the Cabinet and relied instead on small, informal groups of advisers to help him make decisions. The prime minister's official spokesman said the Cabinet was still used to achieve a consensus on important issues. But he added: "You cannot, in a modern government, take every decision in Cabinet. It's just not possible."
+
+Lord Butler said the government had too much freedom to "bring in bad Bills" and "to do whatever it likes" and it relied too much on the advice of political appointees. The former cabinet secretary said in an interview with The Spectator magazine: "I would be critical of the present government in that there is too much emphasis on selling, there is too much central control and there is too little of what I would describe as reasoned deliberation which brings in all the arguments." Mr Howard described Lord Butler's intervention as "very important". "This is from someone who was an insider at the very heart of the Blair government. "It is certainly the most damaging testimony I can ever remember from someone in such an eminent position."
+
+Lord Butler's report earlier this year into Iraq intelligence said the government's September 2002 weapons dossier did not make clear intelligence about claims that Saddam Hussein had stockpiles of chemical and biological weapons was "very thin". The reason for this is that it would have weakened ministers' case for war, Lord Butler said in his Spectator interview, which was conducted by the magazine's editor, Conservative MP Boris Johnson. He said: "When civil servants give material to ministers, they say these are the conclusions we've drawn, but we've got to tell you the evidence we've got is pretty thin. "Similarly, if you are giving something to the United Nations and the country you should warn them."
+
+Asked why he thought the warnings were not there Lord Butler said: "One has got to remember what the purpose of the dossier was. The purpose of the dossier was to persuade the British why the government thought Iraq was a very serious threat."
+
+When asked whether he thought the country was well-governed on the whole, he replied: "Well. I think we are a country where we suffer very badly from Parliament not having sufficient control over the executive, and that is a very grave flaw. "We should be breaking away from the party whip. The executive is much too free to bring in a huge number of extremely bad Bills, a huge amount of regulation and to do whatever it likes - and whatever it likes is what will get the best headlines tomorrow. "All that is part of what is bad government in this country." Lord Butler's assessment was backed by his predecessor as Cabinet Secretary, Lord Armstrong. Lord Armstrong told BBC Two's Newsnight: "I agree ... there doesn't appear to be the sort of informed collective political judgement brought to bear on decision-making that those affected by decisions are entitled to expect." Liberal Democrat deputy leader Menzies Campbell said he thought Lord Butler's comments were "well justified" and Mr Blair's style of leadership was "corrosive of the whole system of government". But Labour former minister Jack Cunningham accused Lord Butler of basing his comments on the first eight months of the incoming Labour administration, when he was cabinet secretary. Mr Cunningham told BBC Radio 4's Today programme: "Taken together, Robin Butler's comments are partial, inaccurate and cannot be taken as anything other than politically biased against the Labour government."
+
 """
             
 with get_openai_callback() as cb:
